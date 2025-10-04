@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>黑洞任務：宇宙真相追蹤</title>
+  <style>
+    body {
+      font-family: 'Noto Sans TC', sans-serif;
+      background: transparent;/*linear-gradient(to right, #211134, #211036, #1c0b2f);*/
+      color: #fff;
+      text-align: center;
+      padding: 2em;
+    }
+    .container {
+      max-width: 700px;
+      margin: auto;
+      background: rgba(0,0,0,0.7);
+      border-radius: 15px;
+      padding: 2em;
+      box-shadow: 0 0 20px rgba(255,255,255,0.1);
+    }
+    .hidden { display: none; }
+    button {
+      margin: 1em;
+      padding: 0.75em 2em;
+      font-size: 1.2em;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      background: #61248a;
+      color: white;
+      transition: background 0.3s ease;
+    }
+    button:hover { background: #d0b5ff; }
+    .choice-btn {
+      display: block;
+      margin: 1em auto;
+      width: 90%;
+      cursor: pointer;
+    } 
+    .content { max-width: 600px; margin: auto; }
+    h1 {
+      font-size: 30px;             /* 字體大小 */
+      color: #ffffff;              /* 白色字體比較適合做光暈效果 */
+      font-weight: bold;           /* 粗體 */
+      text-align: center;          /* 置中 */
+      margin-bottom: 30px;         /* 下方留空 */
+      text-shadow: 
+        0 0 5px #7300ff,           /* 淺紫光暈 */
+        0 0 10px #7300ff,
+        0 0 15px #7300ff,
+        0 0 20px #7300ff;
+      /*background-color: #000000;   /* 建議加深背景讓光暈更明顯 */
+      padding: 0px;
+      border-radius: 10px;
+    }
+    h4 {
+      font-size: 1.4em;
+      line-height: 1.6;
+
+      margin-bottom: 1em;
+      color: #9a42ff;
+    }
+    h5 {
+      font-size: 1.2em;
+      line-height: 1.2;
+      margin-top: 0em;
+      margin-bottom: 1em;
+      color: #d0b5ff;
+    }
+    .intro {
+      text-align: left;
+      margin-bottom: 0em;
+      
+      background: rgba(255,255,255,0.05);
+      padding: 0.5em;
+      border-radius: 10px;
+    }
+    
+    #question-title {
+      font-size: *2em;  /* 你可以依需求調整數值 */
+      font-weight: bold; /* 也可以設為 normal, lighter 等 */
+      margin-bottom: 0.5em;
+      color: #9a42ff;
+    }
+    #question-text {
+      font-size: 1.5em;
+      line-height: 1.6;
+      margin-bottom: 1em;
+    }
+    #question-intro {
+      font-size: 1.15em;
+      line-height: 1.2;
+      margin-top: -1em;
+      margin-bottom: 0em;
+    }
+    #feedback-title {
+      font-size: 2em;  /* 你可以依需求調整數值 */
+      font-weight: bold; /* 也可以設為 normal, lighter 等 */
+      margin-bottom: 0.5em;
+      color: #9a42ff;
+    }
+    #feedback-text {
+      font-size: 1.5em;
+      line-height: 1.6;
+      margin-bottom: 1em;
+      text-align: justify;
+    }
+    #knowledge-title {
+      font-size: 2em;  /* 你可以依需求調整數值 */
+      font-weight: bold; /* 也可以設為 normal, lighter 等 */
+      margin-bottom: 0.5em;
+      color: #9a42ff;
+    }
+    #knowledge-text {
+      font-size: 1.5em;
+      line-height: 1.6;
+      margin-bottom: 1em;
+      text-align: justify;
+    }
+    #final-feedback {
+      font-size: 2em;
+      margin: 1em 0;
+      text-align: justify;
+      font-weight: bold;
+      background: linear-gradient(270deg, red, orange, yellow, green, blue, indigo, violet, red);
+      background-size: 400% 400%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: rainbow 2s ease infinite;
+    }
+    .final-score {
+      margin-top: 1em;
+      font-size: 1.8em;
+      color: #9a42ff;;
+    }
+    .all-endings {
+      margin-top: 1.6em;
+      font-size: 1.2em;
+      color: #eee;
+      text-align: left;
+      padding: 1em;
+      background-color: rgba(255,255,255,0.05);
+      border-radius: 10px;
+    }
+    #result-screen .all-endings h3 {
+      margin-top: 0em;
+      /*font-size: 0.95em; /* 修改"所有評語對照表"標題的字體大小 */
+    }
+
+    #result-screen .all-endings ul li {
+      text-align: justify;
+      /*font-size: 0.5em; /* 修改評語列表的字體大小 */
+    }
+    
+    .score-display {
+      margin-top: 1em;
+      font-size: 1em;
+      color: #ffffff;
+    }
+    
+    .option-button {
+      display: block;
+      margin: 10px auto;
+      width: 80%;
+    }
+    .hidden {
+      display: none;
+    }
+    
+    #final-highlight {
+      font-size: 1.5em;
+      margin: 1em 0;
+      font-weight: bold;
+      text-align: center;
+      background: linear-gradient(270deg, red, orange, yellow, green, blue, indigo, violet, red);
+      background-size: 400% 400%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: rainbow 2s ease infinite;
+    }
+    h6 {
+      font-size: 1.3em;
+      margin: 1em 0;
+      text-align: justify;
+      color: #9a42ff;
+      text-align: center;
+    }
+    
+    @keyframes rainbow {
+      0% { background-position: 100% 50%; }
+      50% { background-position: 0% 50%; }
+      100% { background-position: 100% 50%; }
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+  <div id="start-screen">
+    <h1>黑洞任務：宇宙真相追蹤</h1>
+    <h4>在無光之地，尋找宇宙的真理！</h4>
+    <div class="intro">
+      <h5>從牛頓到愛因斯坦，人類試圖理解宇宙的運作方式，而黑洞正是這場探索的關鍵節點。宇宙劇場電影《黑洞》的內容化為這款小遊戲，邀請你一起走過理論與觀測的歷程，破解黑洞相關的宇宙謎團。</h5>
+      <h5>一同見證人類如何一步步接近宇宙的真相！</h5>
+      <h3>🔍 遊戲說明</h3>
+      <p>🌌 <strong>背景故事</strong><br>你受命前往一艘無人太空探測器，它已完成一段驚心動魄的航程，留下珍貴的觀測紀錄。現在，你的任務是依照這些紀錄，一步步重建它的旅程，破解沿途的科學謎團。每一步，都是接近真相的線索拼圖。</p>
+      <p>🧠 <strong>玩法簡介</strong><br>遊戲總共 10 關。每關只有一個正確答案，答對得 1 分，答錯 0 分。</p>
+      <p>🏆 <strong>目標與結局</strong><br>遊戲結束後，將根據你的總分給予不同的評語與稱號。你能成功破解所有謎團，成為宇宙奧秘大師嗎？</p>
+    </div>
+	<p>註：本遊戲介面設計以手機使用者為主，於電腦瀏覽時部分內容可能無法完整顯示。</p>
+    <button onclick="startGame()">開始遊戲</button>
+  </div>
+  <!-- 問題頁 -->
+  <div id="question-screen" class="hidden">
+    <h2 id="question-title"></h2>
+    <div class="intro">
+      <p id="question-intro"></p>      
+    </div>
+    <p style="text-align: justify;" id="question-text"></p>
+    <div id="options-container"></div>
+  </div>
+  <!-- 回饋頁 -->
+  <div class="hidden" id="feedback-screen">
+    <h3 id="feedback-title"></h3>
+    <p id="feedback-text"></p>
+    <div id="round-score" class="score-display hidden"></div>
+    <button onclick="showKnowledge()">查看解析</button>
+  </div>
+  <!-- 知識頁 -->
+  <div class="hidden" id="knowledge-screen">
+    <h3 id="knowledge-title">知識補充</h3>
+    <p id="knowledge-text"></p>
+    <div id="info-link" class="hidden" style="margin-top: 1em;"></div>
+    <button onclick="nextQuestion()">下一頁</button>
+  </div>
+  <!-- 結尾頁 -->
+  <div id="final-message-screen" class="hidden">
+    <h6>你成功解析了探測器傳回的所有紀錄。<br>從恆星的誕生與死亡，<br>到黑洞的觀測與蒸發，<br>每一關都揭示了宇宙運行的基本規律。<br>這些資料將為後續研究提供關鍵線索。<br>宇宙仍有許多未知等待被發現——<br>任務結束，但探索永無止境。</h6>
+    <h2 id="final-highlight">未來的科學家，會以你的分析為起點，<br>繼續追尋宇宙的更深層真相。</h2>
+    <button onclick="showResult()">下一頁</button>
+  </div>
+  <!-- 結算頁 -->
+  <div class="hidden" id="result-screen">
+    <h2>🌟 任務結束！</h2>
+    <p id="final-feedback"></p>
+    <div class="final-score" id="final-score"></div>   
+    <div class="all-endings">
+      <h3>所有評語對照表：</h3>
+      <ul>
+        <li>0–2 分：每次嘗試都更靠近真相，歡迎再次挑戰！</li>
+        <li>3–5 分：好開始是成功的一半，繼續追尋宇宙的奧祕吧！</li>
+        <li>6–7 分：宇宙新探員，你的觀察力正在穩定成長中！</li>
+        <li>8–9 分：太空偵查高手！再一點點就能破解全部謎團！</li>
+        <li>10 分：宇宙奧秘大師！你已掌握宇宙的關鍵祕密！</li>
+      </ul>
+    </div>
+    <button onclick="restartGame()">重新開始</button>
+  </div>
+</div>
+  <script>
+    const questions = [
+      {
+        title: "第 1 關：重力的第一步",
+        intro: `
+          🔎 任務簡報
+          太空探測器靠近一顆陌生行星時出現了奇怪的現象，請幫忙判斷是什麼重力理論最適合解釋它。
+          📁 調查資料
+          「探測器一開始直線飛行，但靠近行星時，它軌道開始彎曲，最後被穩定地拉進繞行軌道，就像月亮繞地球那樣。」
+        `,
+        question: "你覺得最適合解釋這個現象的是哪一種重力理論？",
+        options: [
+          "牛頓的萬有引力：有質量的東西會彼此吸引",
+          "狹義相對論：描述高速移動時時間會變慢",
+          "廣義相對論：重力會讓時空彎曲",
+          "黑洞理論：描述黑洞和它發出的能量"
+        ],
+        answerIndex: 0,
+        feedback: "牛頓認為重力是物體間的吸引力，而愛因斯坦則認為重力是物體使時空彎曲後的結果，兩者理論基礎不同但都很重要。這類規模的軌道運動，用牛頓的萬有引力就可以很好解釋。在更極端或更精密的情況下，廣義相對論才會顯現出差異。",
+        knowledge: "牛頓在 17 世紀提出萬有引力定律，成功解釋了行星運動；但到了 20 世紀，愛因斯坦的廣義相對論指出重力並不是一種真正的「力」，而是質量使周圍的時空彎曲，物體在彎曲的時空中運動才呈現出被「吸引」的效果。這為我們理解緻密天體如黑洞奠定基礎。"
+        
+      },
+      {
+        title: "第 2 關：光也會拐彎？",
+        intro: `
+        	🔎 任務簡報  
+        	探測器在巡航途中，長距離觀測某星區時，回傳了不尋常的影像。請根據調查資料推測原因。
+        	📁 調查資料  
+          「我們對準的是一個遙遠星系，但畫面中竟然出現兩個幾乎一模一樣的影像，而且它們的位置怪怪的，好像有什麼東西把它們拉歪了。」 
+        `,
+        question: "造成這個影像異常最可能的原因是什麼？",
+        options: [
+          "畫面中其實是兩個外觀看起來相似、剛好靠得很近的星系",
+          "光線被一個看不見的重力天體彎曲了路徑",
+          "探測器的鏡頭自動調焦時產生重影",
+          "星系發生爆炸，光一分為二傳過來"
+        ],
+        answerIndex: 1,
+        feedback: "這種現象稱為重力透鏡效應，是強重力場讓遙遠星系的光發生彎曲，造成我們看到雙重甚至環狀影像。",
+        knowledge: "根據愛因斯坦的廣義相對論，重力會讓時空彎曲，而光線在彎曲的時空中會改變行進方向。當一個質量極大的天體（如黑洞或星系團）位於探測器與遙遠星體之間時，就會產生「重力透鏡效應」。 1919 年 5 月的日全食，艾丁頓發現來自遙遠恆星的光線在途經太陽周圍時發生偏轉，首次證實重力透鏡效應。這能讓我們看到變形、重影甚至放大的星系影像，是現代天文學研究暗物質與大尺度結構的重要工具。",
+        link: [
+          { text: "展示場 3 樓：重力透鏡", url: "https://sites.google.com/view/tamwebtp/%E4%B8%89%E6%A8%93%E5%B1%95%E7%A4%BA%E5%8D%80_1/%E6%98%9F%E7%B3%BB/%E9%87%8D%E5%8A%9B%E9%80%8F%E9%8F%A1"},
+          { text: "天文新知：科學家利用重力透鏡效應發現 300 億倍太陽質量的超大質量黑洞", url: "https://tam.gov.taipei/News_Content.aspx?n=EF86D8AF23B9A85B&sms=F32C4FF0AC5C2801&s=0B492D9B1ACB3DD0"}
+          ]
+      },
+      {
+        title: "第 3 關：恆星老了會怎樣？",
+        intro: `
+          🔎 任務簡報  
+          探測器靠近一顆質量與太陽相近的天體，儀器顯示它正處於生命末期。我們記錄了它的演化跡象。
+          📁 調查資料  
+          「據紀錄顯示，這顆天體過去曾膨脹成紅巨星，外層物質逐漸逸散。現在只剩下內部緻密的核心，體積像地球那麼小……」
+        `,
+        question: "這顆天體最有可能是下列哪一種？",
+        options: [
+          "黑洞",
+          "白矮星",
+          "中子星",
+          "超新星殘骸"
+        ],
+        answerIndex: 1,
+        feedback: "像太陽這樣的小質量（低於 8 倍太陽質量）恆星，在離開主序帶後會變成紅巨星，最後核心留下白矮星。",
+        knowledge: "白矮星是恆星演化的殘骸，通常來自質量較小（低於 8 倍太陽質量）的恆星。當這類恆星耗盡核燃料後會膨脹成紅巨星，然後噴出外層氣體，形成行星狀星雲，中心則剩下高密度、高溫的核心，也就是白矮星。",
+        link: [
+          { text: "展示場 2 樓：赫羅圖與恆星的一生", url: "https://sites.google.com/view/tamwebtp/%E4%BA%8C%E6%A8%93%E5%B1%95%E7%A4%BA%E5%8D%80_1/%E6%81%86%E6%98%9F/%E8%B5%AB%E7%BE%85%E5%9C%96%E8%88%87%E6%81%86%E6%98%9F%E7%9A%84%E4%B8%80%E7%94%9F"},
+          { text: "展示場 2 樓：緻密星體", url: "https://sites.google.com/view/tamwebtp/%E4%BA%8C%E6%A8%93%E5%B1%95%E7%A4%BA%E5%8D%80_1/%E6%81%86%E6%98%9F/%E7%B7%BB%E5%AF%86%E6%98%9F%E9%AB%94"}
+        ]
+      },
+      {
+        title: "第 4 關：宇宙最密的天體？",
+        intro: `
+          🔎 任務簡報  
+          探測器偵測到一個體積極***卻能發出強烈無線電波的天體。訊號極為規律。它似乎不是普通的恆星，而是某種極端狀態的天體。
+          📁 調查資料  
+          「這顆天體比太陽***許多，燃料耗盡後發生猛烈爆炸，留下的核心直徑約 20 ***，卻比太陽還***！它每秒自轉數十次，並發出穩定脈衝訊號。」
+        `,
+        question: "經證實，這顆恆星是一顆中子星。任務簡報和調查資料中遺失的關鍵部分依序是什麼？",
+        options: [
+          "大；重；AU；重",
+          "大；輕；AU；輕",
+          "小；重；km；重",
+          "小；輕；km；輕"
+        ],
+        answerIndex: 2,
+        feedback: "中子星是中等質量（ 8 ~ 20 倍太陽質量）恆星爆炸後殘留下的超高密度核心，有時會成為規律發出訊號的脈衝星。",
+        knowledge: "當中等質量（ 8 ~ 20 倍太陽質量）恆星耗盡燃料時，會發生超新星爆炸。爆炸後的核心因重力塌縮，質子與電子結合形成中子，產生極高密度的中子星。一顆典型的中子星質量介於太陽質量的 1.35 到 2.1 倍，半徑則在 10 至 20 公里之間。某些中子星高速自轉並發出規律電磁波，稱為脈衝星。",
+        link: [
+          { text: "展示場 2 樓：赫羅圖與恆星的一生", url: "https://sites.google.com/view/tamwebtp/%E4%BA%8C%E6%A8%93%E5%B1%95%E7%A4%BA%E5%8D%80_1/%E6%81%86%E6%98%9F/%E8%B5%AB%E7%BE%85%E5%9C%96%E8%88%87%E6%81%86%E6%98%9F%E7%9A%84%E4%B8%80%E7%94%9F"},
+          { text: "展示場 2 樓：緻密星體", url: "https://sites.google.com/view/tamwebtp/%E4%BA%8C%E6%A8%93%E5%B1%95%E7%A4%BA%E5%8D%80_1/%E6%81%86%E6%98%9F/%E7%B7%BB%E5%AF%86%E6%98%9F%E9%AB%94"}
+        ]
+      },
+      {
+        title: "第 5 關：看不見的重力主宰者",
+        intro: `
+          🔎 任務簡報  
+          探測器抵達一個星系中心附近，這裡沒有可見光源，但許多恆星都在高速繞著某個看不見的點旋轉，像是被某種東西強力吸引。
+          📁 調查資料  
+          「我們偵測到一個區域密度極高，周圍氣體高速旋轉並產生高能輻射。雖然看不見核心，但望遠鏡顯示那裡有一個穩定的黑影，形狀奇特，彷彿連光都無法逃離。」
+        `,
+        question: "你認為中心那個無法直接看到的天體最可能是？",
+        options: [
+          "黑矮星",
+          "中子星",
+          "黑洞",
+          "星際塵埃雲"
+        ],
+        answerIndex: 2,
+        feedback: "黑洞是唯一能解釋這種極強重力與無法逃離的光的天體，我們透過氣體盤的高能輻射與重力透鏡效應推測出它的存在。",
+        knowledge: "黑洞是由大質量（超過 20 倍太陽質量）恆星演化末期在超新星爆炸後，其核心無法支撐自身重力而發生重力崩塌所形成。這種坍縮沒有止境，會形成一個密度趨近無限、體積極小的「奇異點」，其周圍形成稱為「事件視界」的邊界。進入事件視界的物質與光將無法逃離，這使黑洞本身無法被直接觀測。黑洞的存在改變了周遭的時空結構，使附近恆星與氣體出現異常運動，這些現象正是我們推斷黑洞存在的線索。",
+        link: [
+          { text: "展示場 2 樓：赫羅圖與恆星的一生", url: "https://sites.google.com/view/tamwebtp/%E4%BA%8C%E6%A8%93%E5%B1%95%E7%A4%BA%E5%8D%80_1/%E6%81%86%E6%98%9F/%E8%B5%AB%E7%BE%85%E5%9C%96%E8%88%87%E6%81%86%E6%98%9F%E7%9A%84%E4%B8%80%E7%94%9F"},
+          { text: "展示場 2 樓：緻密星體", url: "https://sites.google.com/view/tamwebtp/%E4%BA%8C%E6%A8%93%E5%B1%95%E7%A4%BA%E5%8D%80_1/%E6%81%86%E6%98%9F/%E7%B7%BB%E5%AF%86%E6%98%9F%E9%AB%94"},
+          { text: "展示場 2 樓：黑洞", url: "https://sites.google.com/view/tamwebtp/%E4%BA%8C%E6%A8%93%E5%B1%95%E7%A4%BA%E5%8D%80_1/%E6%81%86%E6%98%9F/%E9%BB%91%E6%B4%9E"},
+          { text: "臺北星空 120 期 認識黑洞", url: "https://tam.gov.taipei/News_Content.aspx?n=A2F7381512F89DFB&sms=8DB4DFD3C6946BB3&s=53822E5B89E557C6"}
+        ]
+      },
+      {
+        title: "第 6 關：黑洞現身的線索",
+        intro: `
+          🔎 任務簡報  
+          探測器即將進入一個可能藏有黑洞的區域，但這個天體本身完全不可見。為了確認它是否真的是黑洞，我們需要分析周遭的觀測數據，並判斷有哪些觀測方式能提供線索。
+          📁 調查資料  
+          「附近恆星的軌道怪異，彷彿受到隱形天體吸引；除了偵測到強烈的 X 射線與微弱的時空波動。我們還派出許多僚機組成陣列，偵測無線電波。每兩台僚機形成一條基線，透過干涉的方式結合觀測資料，如同事件視界望遠鏡一般，以此收到最新影像——模糊但呈現明亮光環和黑暗核心。」
+        `,
+        question: "你會透過什麼方式來觀測這類不可見的天體？",
+        options: [
+          "X 射線輻射：觀測吸積盤釋放的高能輻射",
+          "重力波：由兩個緻密天體合併釋放的時空波動",
+          "天體影像：觀測天體周圍光線彎曲的影像",
+          "以上皆是"
+        ],
+        answerIndex: 3,
+        feedback: "這三種方法各自提供了黑洞存在的不同證據，幫助我們揭開它神祕的面貌。",
+        knowledge: "黑洞本身不會發光，但周圍落入的物質會在吸積盤中高速旋轉並加熱，產生強烈的 X 射線。若兩個緻密天體（如中子星或黑洞）合併，也會釋出可被觀測的重力波。此外，科學家利用全球多座無線電望遠鏡組成的「事件視界望遠鏡」（EHT, Event Horizon Telescope），在 2019 年與 2022 年分別拍下 M87* 與銀河系中心黑洞的事件視界影像，這些成就象徵我們對黑洞的觀測正式邁入新紀元。",
+        link: [
+          { text: "展示場 3 樓：什麼是重力波", url: "https://sites.google.com/view/tamwebtp/%E4%B8%89%E6%A8%93%E5%B1%95%E7%A4%BA%E5%8D%80_1/%E6%98%9F%E7%A9%BA%E8%B5%B0%E5%BB%8A/%E4%BB%80%E9%BA%BC%E6%98%AF%E9%87%8D%E5%8A%9B%E6%B3%A2"},
+          { text: "展示場 3 樓：電波望遠鏡", url: "https://sites.google.com/view/tamwebtp/%E4%B8%89%E6%A8%93%E5%B1%95%E7%A4%BA%E5%8D%80_1/%E5%A4%A9%E6%96%87%E8%A7%80%E6%B8%AC/%E9%9B%BB%E6%B3%A2%E6%9C%9B%E9%81%A0%E9%8F%A1"},
+          { text: "天文新知：事件視界望遠鏡", url: "https://tam.gov.taipei/News_Content.aspx?n=A2F7381512F89DFB&sms=8DB4DFD3C6946BB3&s=CF25F5EC01BF978E"}
+        ]
+      },
+      {
+        title: "第 7 關：多樣黑洞大蒐秘",
+        intro: `
+          🔎 任務簡報  
+          探測器的資料庫同步到了宇宙各地的觀測紀錄，包括巨大星系核心、恆星爆炸殘骸，以及早期宇宙的微弱訊號。
+          📁 調查資料  
+          1. 一個質量與太陽接近的恆星死亡後留下來的極密小天體
+
+          2. 位於星系中央，質量高達數百萬個太陽以上
+
+          3. 被認為存在於宇宙初期形成之際，尚未被直接觀測
+
+          4. 介於恆星級與超大質量黑洞之間，質量數百至數萬倍太陽，但成因未明
+        `,
+        question: "現在你要協助宇宙調查局歸檔，將它們正確分類到對應的黑洞類型中。",
+        options: [
+          "1→恆星級黑洞；2→超大質量黑洞；3→原初黑洞；4→中質量黑洞",
+          "1→中質量黑洞；2→原初黑洞；3→超大質量黑洞；4→恆星級黑洞",
+          "1→原初黑洞；2→中質量黑洞；3→恆星級黑洞；4→超大質量黑洞",
+          "全部歸檔為同一類黑洞，因為黑洞只有一種"
+        ],
+        answerIndex: 0,
+        feedback: "目前所知的黑洞可分為四大類型，其中原初黑洞是尚未發現、只存在於理論中的黑洞。",
+        knowledge: `根據目前理論與觀測，黑洞可分為四種類型：
+
+				1. 恆星級黑洞：大質量恆星塌縮後形成，質量約為數個太陽質量。
+
+				2. 中質量黑洞：質量為數百至數萬個太陽質量，存在與起源仍在研究中。
+
+				3. 超大質量黑洞：位於大多數星系的中心，質量可達數百萬到數十億個太陽。
+
+				4. 原初黑洞：是假設於宇宙誕生初期即形成的黑洞，可能與暗物質有關，也可能就是連結恆星級黑洞和超大質量黑洞的關鍵，但尚未被觀測到。`,
+      },
+      {
+        title: "第 8 關：黑洞正在消失？",
+        intro: `
+          🔎 任務簡報  
+          探測器抵達銀河邊緣的一個極為古老區域，發現一個微小但活躍的重力源，其質量遠低於一般黑洞，卻似乎正緩慢釋放微弱輻射。
+          📁 調查資料  
+          根據探測器傳回的資料，該天體沒有吸積盤或伴星，不存在明顯的能量來源，但周遭卻出現高能粒子逸散的跡象，且重力正在逐漸變弱。
+          `,
+        question: "這可能是什麼物理現象的證據？",
+        options: [
+          "黑洞引力過強，將背景輻射吸收導致附近能量降低",
+          "黑洞產生時空裂縫，讓能量從另一個宇宙湧入",
+          "黑洞與反物質碰撞產生爆炸",
+          "黑洞釋放霍金輻射，導致質量緩慢流失 "
+        ],
+        answerIndex: 3,
+        feedback: "這種粒子釋放的現象正符合霍金輻射的理論預測——即使沒有吸收物質，黑洞也會因量子效應緩慢釋放能量，進而流失質量。",
+        knowledge: "霍金在 1974 年預言：黑洞事件視界附近的量子波動會生成虛粒子對，其中一個掉入黑洞、另一個逃逸，從外界看起來像是黑洞發出輻射。這個過程會使黑洞質量逐漸減少，若持續下去，黑洞終將完全蒸發。這顛覆了原本「黑洞只吞不吐」的印象，並對宇宙的終極命運產生深遠影響。",
+      },
+      {
+        title: "第 9 關：宇宙正在變得更冷清？",
+        intro: `
+          🔎 任務簡報  
+          探測器定點觀測周遭星系的分布與移動速度，發現各星系之間的距離正在以驚人的速率增加。你必須判讀這現象背後可能的驅動因素。
+          📁 調查資料  
+          根據紅移觀測數據，越遠的星系退行速度越快；此外，這種膨脹並非因萬有引力釋放，而是來自一種看不見、無法直接偵測，卻持續推動宇宙加速膨脹的神秘力量。
+          `,
+        question: "造成宇宙加速膨脹的可能主因是什麼？",
+        options: [
+          "星系互斥的電磁力",
+          "星系中恆星爆炸產生的衝擊波",
+          "黑洞引力將星系拉向遠方",
+          "暗能量持續推動空間膨脹"
+        ],
+        answerIndex: 3,
+        feedback: "導致宇宙加速膨脹的關鍵就是暗能量，雖然我們目前對它所知甚少，但它似乎充斥在整個空間中，並主導了宇宙的演化方向。",
+        knowledge: "1990 年代末的超新星觀測顯示：宇宙不但在膨脹，而且膨脹速度還在加快。這出乎意料，因為原本認為萬有引力會逐漸減緩膨脹。為了解釋這個現象，科學家提出「暗能量」的概念。在現今可觀測宇宙中，暗能量占比達68%，暗物質占27%，而一般物質則只占5%。它不像物質會聚集，反而具有推開空間的效應，並在宇宙演化中逐漸成為主導力量。雖然暗能量在早期宇宙並不占主導地位，但隨著空間擴張，它的影響越來越明顯，可能最終導致星系間彼此永遠分離。",
+        link: [
+        	{ text: "展示場 3 樓：宇宙的質量與能量", url: "https://sites.google.com/view/tamwebtp/%E4%B8%89%E6%A8%93%E5%B1%95%E7%A4%BA%E5%8D%80_1/%E5%AE%87%E5%AE%99/%E5%AE%87%E5%AE%99%E7%9A%84%E8%B3%AA%E9%87%8F%E8%88%87%E8%83%BD%E9%87%8F"},
+        	{ text: "天文新知：暗能量可能不存在，有些方式也能解釋現在的宇宙", url: "https://tam.gov.taipei/News_Content.aspx?n=EF86D8AF23B9A85B&sms=F32C4FF0AC5C2801&s=EE7761CFB780F795"}
+         ]
+      },
+      {
+        title: "第 10 關：宇宙正在變得更冷清？",
+        intro: `
+          🔎 任務簡報  
+          在經歷漫長旅程後，探測器來到了宇宙最深邃、最孤寂的角落。這裡看不到星系，也聽不到訊號，只有背景輻射與時空的靜謐寂寥。你的任務，是分析眼前這片無盡黑暗所代表的宇宙命運。
+          📁 調查資料  
+          科學家認為，隨著宇宙不斷加速膨脹，星系之間會漸行漸遠，逐漸脫離任何望遠鏡能觀測的距離。最終恆星熄滅、行星冰封，僅存的黑洞也將在極漫長時間後因霍金輻射蒸發殆盡。當所有能量趨於均勻、再也無法驅動任何現象時，宇宙將進入一種永恆的靜止狀態——熱寂。
+          `,
+        question: "根據目前的觀測與理論，宇宙在極遙遠的未來會發生什麼狀況？",
+        options: [
+          "所有星系會因引力聚集在一起，宇宙收縮成一點",
+          "宇宙會反覆膨脹與收縮，進入循環宇宙階段",
+          "星系彼此遠離、恆星熄滅、黑洞消失，宇宙趨於冷寂",
+          "宇宙突然停止膨脹，時間也會靜止"
+        ],
+        answerIndex: 2,
+        feedback: "隨著星系遠離、恆星耗盡、黑洞蒸發，宇宙將走向一個極端均質、低能量的狀態。沒有星光，沒有生命，只有冷與靜。這便是「熱寂」。",
+        knowledge: "這種宇宙終結型態被稱為「熱寂（heat death）」，又稱「大凍結（Big freeze）」。根據目前觀測，宇宙中的暗能量正導致膨脹加速。若這趨勢持續，所有星系將超出彼此的視界，宇宙中的可用能量最終耗盡。屆時將不再有新結構、新生命或任何活動，宇宙將陷入一片無限的沉寂與冰冷。",
+        link: { text: "展示場 3 樓：宇宙簡史", url: "https://sites.google.com/view/tamwebtp/%E4%B8%89%E6%A8%93%E5%B1%95%E7%A4%BA%E5%8D%80_1/%E5%AE%87%E5%AE%99/%E5%AE%87%E5%AE%99%E7%B0%A1%E5%8F%B2"}
+      }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    function startGame() {
+      document.getElementById("start-screen").classList.add("hidden");
+      showQuestion();
+    }
+
+    function formatIntro(intro) {
+  		return intro
+      .replace(/🔎 任務簡報/, '<strong>🔎 任務簡報</strong><br>')
+      .replace(/📁 調查資料/, '<br><strong>📁 調查資料</strong><br>')
+      .replace(/\n/g, '<br>') // 若你 intro 裡是用換行符號斷行，也可以加這行
+      .replace(/\s{2,}/g, ''); // 清除多餘空白
+  	}
+    function formatknowledge(knowledge) {
+  		return knowledge
+      .replace(/\n/g, '<br>') // 若你 intro 裡是用換行符號斷行，也可以加這行
+      .replace(/\s{2,}/g, ''); // 清除多餘空白
+  	}
+    function showQuestion() {
+      const q = questions[currentQuestion];
+      document.getElementById("question-screen").classList.remove("hidden");
+      document.getElementById("question-title").textContent = q.title;
+      document.getElementById("question-intro").innerHTML = formatIntro(questions[currentQuestion].intro);
+      document.getElementById("question-text").textContent = q.question;
+      const optionsContainer = document.getElementById("options-container");
+      optionsContainer.innerHTML = "";
+      q.options.forEach((opt, index) => {
+        const btn = document.createElement("button");
+        btn.textContent = opt;
+        btn.className = "option-button";
+        btn.onclick = () => checkAnswer(index);
+        	
+        optionsContainer.appendChild(btn);
+      });
+    }
+
+
+    function checkAnswer(selectedIndex) {
+      document.getElementById("question-screen").classList.add("hidden");
+      const q = questions[currentQuestion];
+      document.getElementById("feedback-screen").classList.remove("hidden");
+      if (selectedIndex === q.answerIndex) {
+        document.getElementById("feedback-title").textContent = "答對了！";
+        score++;
+      } else {
+        document.getElementById("feedback-title").textContent = "答錯了...";
+      }
+      document.getElementById("round-score").innerHTML =
+        `目前總分：<strong>${score}</strong>`;
+      document.getElementById("round-score").classList.remove("hidden");
+      document.getElementById("feedback-text").textContent = q.feedback;
+    }
+
+    function showKnowledge() {
+      document.getElementById("feedback-screen").classList.add("hidden");
+      document.getElementById("knowledge-screen").classList.remove("hidden");
+      //document.getElementById("knowledge-text").textContent = questions[currentQuestion].knowledge;
+      document.getElementById("knowledge-text").innerHTML = formatknowledge(questions[currentQuestion].knowledge);
+      const info = questions[currentQuestion];
+      const link = info && info.link;
+      const linkArea = document.getElementById("info-link");
+      if (link) {
+        linkArea.innerHTML = "<p>相關內容</p>";
+
+        // 情況 1：多個網址
+        if (Array.isArray(link)) {
+          link.forEach(l => {
+            linkArea.innerHTML += `<a href="${l.url}" target="_blank" style="display:block; color:#00ccff;">${l.text}</a>`;
+          });
+        }
+        // 情況 2：單一網址
+        else if (link.url && link.text) {
+          linkArea.innerHTML += `<a href="${link.url}" target="_blank" style="display:block; color:#00ccff;">${link.text}</a>`;
+        }
+
+        linkArea.classList.remove("hidden");
+      } else {
+        linkArea.innerHTML = "";
+        linkArea.classList.add("hidden");
+      }
+    }
+
+    function nextQuestion() {
+      document.getElementById("knowledge-screen").classList.add("hidden");
+      currentQuestion++;
+      if (currentQuestion < questions.length) {
+        showQuestion();
+      } else {
+    		document.getElementById("final-message-screen").classList.remove("hidden");
+      }      
+    }
+
+    function showResult() {
+    document.getElementById("final-message-screen").classList.add("hidden");
+      document.getElementById("result-screen").classList.remove("hidden");
+      document.getElementById("final-score").textContent = `你的總分：${score}/10`;
+      let feedback = "";
+      if (score === 10) feedback = "宇宙奧秘大師！你已掌握宇宙的關鍵祕密！";
+      else if (score >= 8) feedback = "太空偵查高手！再一點點就能破解全部謎團！";
+      else if (score >= 6) feedback = "太空新探員，你的觀察力正在穩定成長中！";
+      else if (score >= 3) feedback = "好開始是成功的一半，繼續追尋宇宙的奧祕吧！";
+      else feedback = "每次嘗試都更靠近真相，歡迎再次挑戰！";
+      document.getElementById("final-feedback").textContent = feedback;
+    }
+    function restartGame() {
+      // 重設變數
+      currentQuestion = 0;
+      score = 0;
+
+      // 隱藏所有畫面
+      document.getElementById("result-screen").classList.add("hidden");
+      document.getElementById("final-message-screen").classList.add("hidden");
+      document.getElementById("feedback-screen").classList.add("hidden");
+      document.getElementById("knowledge-screen").classList.add("hidden");
+      document.getElementById("question-screen").classList.add("hidden");
+
+      // 顯示開始畫面
+      document.getElementById("start-screen").classList.remove("hidden");
+    }
+  </script>
+</body>
+</html>
+
